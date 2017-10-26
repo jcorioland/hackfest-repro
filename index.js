@@ -28,6 +28,8 @@ var authorization = createSharedAccessToken(
 
 console.log("Authorization: " + authorization);
 
+var requestCount = 0;
+
 function sendMessageToEventHub(){
   var content = JSON.stringify({ timestamp: Date.now().timestamp, "message": "Hello Event Hub" });
   var contentLenght = content.length;
@@ -53,8 +55,11 @@ function sendMessageToEventHub(){
       console.log(err);
     } else{
       console.log(resp.statusCode + ': ' + resp.statusMessage);
+      requestCount += 1;
     }
   });
+
+  console.log(requestCount);
 };
 
 setInterval(sendMessageToEventHub, 1000)
