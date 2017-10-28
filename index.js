@@ -29,6 +29,8 @@ var authorization = createSharedAccessToken(
 console.log("Authorization: " + authorization);
 
 var requestCount = 0;
+var errorCount = 0;
+var successCount = 0;
 
 function sendMessageToEventHub(){
   var content = JSON.stringify({ timestamp: Date.now().timestamp, "message": "Hello Event Hub" });
@@ -54,18 +56,18 @@ function sendMessageToEventHub(){
   {
     if(err){
       console.log(err);
+      errorCount += 1;
     } else{
       console.log(resp.statusCode + ': ' + resp.statusMessage);
-      requestCount += 1;
+      successCount += 1;
     }
   });
 
-  console.log(requestCount);
+  requestCount += 1;
+  console.log("Requests count: " + requestCount + ", Success count: " + successCount + ", Errors count: " + errorCount);
 };
 
-for(var i = 0; i < 10; i++){
-  setInterval(sendMessageToEventHub, 100);
-}
+setInterval(sendMessageToEventHub, 100);
 
 var server = http.createServer(function(request, response) {
   response.writeHead(200, {"Content-Type": "text/html"});
