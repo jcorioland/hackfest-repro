@@ -63,7 +63,9 @@ function sendMessageToEventHub(){
   console.log(requestCount);
 };
 
-setInterval(sendMessageToEventHub, 100)
+for(var i = 0; i < 10; i++){
+  setInterval(sendMessageToEventHub, 100);
+}
 
 var server = http.createServer(function(request, response) {
   setTimeout(function(){
