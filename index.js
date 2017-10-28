@@ -63,12 +63,14 @@ function sendMessageToEventHub(){
   console.log(requestCount);
 };
 
-setInterval(sendMessageToEventHub, 1000)
+setInterval(sendMessageToEventHub, 100)
 
 var server = http.createServer(function(request, response) {
-  response.writeHead(200, {"Content-Type": "text/html"});
-  response.write("OK");
-  response.end();
+  setTimeout(function(){
+    response.writeHead(200, {"Content-Type": "text/html"});
+    response.write("OK");
+    response.end();
+  }, 2000)
 });
 
 server.listen(process.env.PORT || 8000);
