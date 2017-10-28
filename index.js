@@ -68,11 +68,9 @@ for(var i = 0; i < 10; i++){
 }
 
 var server = http.createServer(function(request, response) {
-  setTimeout(function(){
-    response.writeHead(200, {"Content-Type": "text/html"});
-    response.write("OK");
-    response.end();
-  }, 2000)
+  response.writeHead(200, {"Content-Type": "text/html"});
+  response.write("OK");
+  response.end();
 });
 
 server.listen(process.env.PORT || 8000);
