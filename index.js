@@ -42,7 +42,8 @@ function sendMessageToEventHub(){
       'Content-Type': 'application/json;charset=utf-8',
       'Authorization': authorization,
       'Origin': '*',
-      'Access-Control-Allow-Credentials': true
+      'Access-Control-Allow-Credentials': true,
+      "Connection":"Keep-Alive"
     },
     uri: "https://" + process.env.EVENT_HUB_HOST_URL + "/messages",
     method: "POST",
