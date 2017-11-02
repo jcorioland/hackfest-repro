@@ -9,8 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "agentkeepalive": "^3.3.0",
     "crypto": "^1.0.1",
     "http": "0.0.0",
+    "https": "^1.0.0",
     "request": "^2.83.0",
     "utf8": "^2.1.2"
   }

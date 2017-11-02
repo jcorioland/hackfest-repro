@@ -1,7 +1,9 @@
 var utf8 = require('utf8');
 var crypto = require('crypto');
 var request = require('request');
+var https = require("https");
 var http = require("http");
+const HttpsAgent = require('agentkeepalive').HttpsAgent;
 
 function createSharedAccessToken(uri, saName, saKey) {
     if (!uri || !saName || !saKey) {
@@ -20,11 +22,18 @@ function createSharedAccessToken(uri, saName, saKey) {
         encodeURIComponent(hash) + '&se=' + ttl + '&skn=' + saName;
 };
 
-var authorization = createSharedAccessToken(
+const authorization = createSharedAccessToken(
   process.env.EVENT_HUB_HOST,
   process.env.EVENT_HUB_ACCESS_KEY_NAME,
   process.env.EVENT_HUB_ACCESS_KEY_VALUE
 );
+
+const keepaliveAgent = new HttpsAgent({
+  maxSockets: 100,
+  maxFreeSockets: 10,
+  timeout: 60000,
+  freeSocketKeepAliveTimeout: 30000, // free socket keepalive for 30 seconds 
+});
 
 console.log("Authorization: " + authorization);
 
@@ -36,38 +45,68 @@ function sendMessageToEventHub(){
   var content = JSON.stringify({ timestamp: Date.now().timestamp, "message": "Hello Event Hub" });
   var contentLenght = content.length;
 
-  request.post( 
-  {
-    headers: 
-    {
+  var postOptions = {
+    host: process.env.EVENT_HUB_HOST,
+    path: "/mapwize-repro-hub/messages",
+    port: 443,
+    method: "POST",
+    headers:{
       'Content-Length': contentLenght,
       'Content-Type': 'application/json;charset=utf-8',
       'Authorization': authorization,
       'Origin': '*',
-      'Access-Control-Allow-Credentials': true,
-      "Connection":"Keep-Alive"
+      'Access-Control-Allow-Credentials': true
     },
-    uri: "https://" + process.env.EVENT_HUB_HOST_URL + "/messages",
-    method: "POST",
-    body: content,
+    agent: keepaliveAgent
+  };
 
-  }, 
-  function(err, resp, body)
-  {
-    if(err){
-      console.log(err);
-      errorCount += 1;
-    } else{
-      console.log(resp.statusCode + ': ' + resp.statusMessage);
+  var postRequest = https.request(postOptions, function(res) {
+    if(res.statusCode === 201) {
       successCount += 1;
+    }
+    else {
+      errorCount += 1;
     }
   });
 
+  postRequest.on('error', function(e) {
+    console.log('problem with request: ' + e.message);
+  });
+
+  postRequest.write(content);
+  postRequest.end();
+
+  // request.post( 
+  // {
+  //   headers: 
+  //   {
+  //     'Content-Length': contentLenght,
+  //     'Content-Type': 'application/json;charset=utf-8',
+  //     'Authorization': authorization,
+  //     'Origin': '*',
+  //     'Access-Control-Allow-Credentials': true,
+  //     "Connection":"Keep-Alive"
+  //   },
+  //   uri: "https://" + process.env.EVENT_HUB_HOST_URL + "/messages",
+  //   method: "POST",
+  //   body: content
+  // }, 
+  // function(err, resp, body)
+  // {
+  //   if(err){
+  //     console.log(err);
+  //     errorCount += 1;
+  //   } else{
+  //     console.log(resp.statusCode + ': ' + resp.statusMessage);
+  //     successCount += 1;
+  //   }
+  // });
+  
   requestCount += 1;
   console.log("Requests count: " + requestCount + ", Success count: " + successCount + ", Errors count: " + errorCount);
 };
 
-setInterval(sendMessageToEventHub, 100);
+setInterval(sendMessageToEventHub, 1000);
 
 var server = http.createServer(function(request, response) {
   response.writeHead(200, {"Content-Type": "text/html"});
