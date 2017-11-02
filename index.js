@@ -75,32 +75,6 @@ function sendMessageToEventHub(){
 
   postRequest.write(content);
   postRequest.end();
-
-  // request.post( 
-  // {
-  //   headers: 
-  //   {
-  //     'Content-Length': contentLenght,
-  //     'Content-Type': 'application/json;charset=utf-8',
-  //     'Authorization': authorization,
-  //     'Origin': '*',
-  //     'Access-Control-Allow-Credentials': true,
-  //     "Connection":"Keep-Alive"
-  //   },
-  //   uri: "https://" + process.env.EVENT_HUB_HOST_URL + "/messages",
-  //   method: "POST",
-  //   body: content
-  // }, 
-  // function(err, resp, body)
-  // {
-  //   if(err){
-  //     console.log(err);
-  //     errorCount += 1;
-  //   } else{
-  //     console.log(resp.statusCode + ': ' + resp.statusMessage);
-  //     successCount += 1;
-  //   }
-  // });
   
   requestCount += 1;
   console.log("Requests count: " + requestCount + ", Success count: " + successCount + ", Errors count: " + errorCount);
@@ -110,7 +84,7 @@ setInterval(sendMessageToEventHub, 1000);
 
 var server = http.createServer(function(request, response) {
   response.writeHead(200, {"Content-Type": "text/html"});
-  response.write("OK");
+  response.write("OK !");
   response.end();
 });
 
