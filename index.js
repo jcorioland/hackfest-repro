@@ -80,7 +80,9 @@ function sendMessageToEventHub(){
   console.log("Requests count: " + requestCount + ", Success count: " + successCount + ", Errors count: " + errorCount);
 };
 
-setInterval(sendMessageToEventHub, 1000);
+setInterval(sendMessageToEventHub, 100);
+setInterval(sendMessageToEventHub, 100);
+setInterval(sendMessageToEventHub, 100);
 
 var server = http.createServer(function(request, response) {
   response.writeHead(200, {"Content-Type": "text/html"});
