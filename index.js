@@ -28,7 +28,12 @@ const authorization = createSharedAccessToken(
   process.env.EVENT_HUB_ACCESS_KEY_VALUE
 );
 
-const keepaliveAgent = new HttpsAgent();
+const keepaliveAgent = new HttpsAgent({
+  maxSockets: 100,
+  maxFreeSockets: 10,
+  timeout: 2000,
+  freeSocketKeepAliveTimeout: 2000, // free socket keepalive for 30 seconds 
+});
 
 console.log("Authorization: " + authorization);
 
