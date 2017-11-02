@@ -29,9 +29,9 @@ const authorization = createSharedAccessToken(
 );
 
 const keepaliveAgent = new HttpsAgent({
-  maxSockets: 100,
+  maxSockets: 1000,
   maxFreeSockets: 10,
-  timeout: 2000,
+  timeout: 3000,
   freeSocketKeepAliveTimeout: 5000,
 });
 
@@ -64,17 +64,14 @@ function sendMessageToEventHub(){
   };
 
   var postRequest = https.request(postOptions, function(res) {
-    console.log(res.statusMessage);
     if(res.statusCode === 201) {
       successCount += 1;
-    }
-    else {
-      errorCount += 1;
     }
   });
 
   postRequest.on('error', function(e){
-      console.log(e.message);
+      console.log("Error: " + e.message);
+      errorCount += 1;
   });
   
   postRequest.write(content);
