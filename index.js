@@ -28,12 +28,7 @@ const authorization = createSharedAccessToken(
   process.env.EVENT_HUB_ACCESS_KEY_VALUE
 );
 
-const keepaliveAgent = new HttpsAgent({
-  maxSockets: 100,
-  maxFreeSockets: 10,
-  timeout: 60000,
-  freeSocketKeepAliveTimeout: 30000, // free socket keepalive for 30 seconds 
-});
+const keepaliveAgent = new HttpsAgent();
 
 console.log("Authorization: " + authorization);
 
@@ -64,6 +59,7 @@ function sendMessageToEventHub(){
   };
 
   var postRequest = https.request(postOptions, function(res) {
+    console.log(res.statusMessage);
     if(res.statusCode === 201) {
       successCount += 1;
     }
