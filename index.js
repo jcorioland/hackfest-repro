@@ -45,6 +45,9 @@ function sendMessageToEventHub(){
   var content = JSON.stringify({ timestamp: Date.now().timestamp, "message": "Hello Event Hub" });
   var contentLenght = content.length;
 
+  requestCount += 1;
+  console.log("Requests count: " + requestCount + ", Success count: " + successCount + ", Errors count: " + errorCount);
+
   var postOptions = {
     host: process.env.EVENT_HUB_HOST,
     path: "/mapwize-repro-hub/messages",
@@ -68,16 +71,9 @@ function sendMessageToEventHub(){
       errorCount += 1;
     }
   });
-
-  postRequest.on('error', function(e) {
-    console.log('problem with request: ' + e.message);
-  });
-
+  
   postRequest.write(content);
   postRequest.end();
-  
-  requestCount += 1;
-  console.log("Requests count: " + requestCount + ", Success count: " + successCount + ", Errors count: " + errorCount);
 };
 
 setInterval(sendMessageToEventHub, 100);
