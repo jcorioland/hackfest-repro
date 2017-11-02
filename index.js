@@ -32,7 +32,7 @@ const keepaliveAgent = new HttpsAgent({
   maxSockets: 100,
   maxFreeSockets: 10,
   timeout: 2000,
-  freeSocketKeepAliveTimeout: 2000, // free socket keepalive for 30 seconds 
+  freeSocketKeepAliveTimeout: 5000,
 });
 
 console.log("Authorization: " + authorization);
@@ -71,6 +71,10 @@ function sendMessageToEventHub(){
     else {
       errorCount += 1;
     }
+  });
+
+  postRequest.on('error', function(e){
+      console.log(e.message);
   });
   
   postRequest.write(content);
