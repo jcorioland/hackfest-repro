@@ -48,37 +48,35 @@ function sendMessageToEventHub(){
   requestCount += 1;
   console.log("Requests count: " + requestCount + ", Success count: " + successCount + ", Errors count: " + errorCount);
 
-  var postOptions = {
-    host: process.env.EVENT_HUB_HOST,
-    path: "/mapwize-repro-hub/messages",
-    port: 443,
-    method: "POST",
-    headers:{
-      'Content-Length': contentLenght,
-      'Content-Type': 'application/json;charset=utf-8',
-      'Authorization': authorization,
-      'Origin': '*',
-      'Access-Control-Allow-Credentials': true
-    },
-    agent: keepaliveAgent
-  };
+  // var postOptions = {
+  //   host: process.env.EVENT_HUB_HOST,
+  //   path: "/mapwize-repro-hub/messages",
+  //   port: 443,
+  //   method: "POST",
+  //   headers:{
+  //     'Content-Length': contentLenght,
+  //     'Content-Type': 'application/json;charset=utf-8',
+  //     'Authorization': authorization,
+  //     'Origin': '*',
+  //     'Access-Control-Allow-Credentials': true
+  //   },
+  //   agent: keepaliveAgent
+  // };
 
-  var postRequest = https.request(postOptions, function(res) {
-    if(res.statusCode === 201) {
-      successCount += 1;
-    }
-    else {
-      errorCount += 1;
-    }
-  });
+  // var postRequest = https.request(postOptions, function(res) {
+  //   if(res.statusCode === 201) {
+  //     successCount += 1;
+  //   }
+  //   else {
+  //     errorCount += 1;
+  //   }
+  // });
   
-  postRequest.write(content);
-  postRequest.end();
+  // postRequest.write(content);
+  // postRequest.end();
 };
 
-// setInterval(sendMessageToEventHub, 100);
-// setInterval(sendMessageToEventHub, 100);
-// setInterval(sendMessageToEventHub, 100);
+setInterval(sendMessageToEventHub, 100);
 
 var server = http.createServer(function(request, response) {
   response.writeHead(200, {"Content-Type": "text/html"});
