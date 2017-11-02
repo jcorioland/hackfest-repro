@@ -29,7 +29,7 @@ const authorization = createSharedAccessToken(
 );
 
 const keepaliveAgent = new HttpsAgent({
-  maxSockets: 1000,
+  maxSockets: 50,
   maxFreeSockets: 10,
   timeout: 3000,
   freeSocketKeepAliveTimeout: 5000,
