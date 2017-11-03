@@ -79,11 +79,9 @@ function sendMessageToEventHub(){
   postRequest.end();
 };
 
-setInterval(sendMessageToEventHub, 100);
-setInterval(sendMessageToEventHub, 100);
-setInterval(sendMessageToEventHub, 100);
-setInterval(sendMessageToEventHub, 100);
-setInterval(sendMessageToEventHub, 100);
+for(var i = 0; i < 20; i++) {
+  setInterval(sendMessageToEventHub, 100);
+}
 
 var server = http.createServer(function(request, response) {
   response.writeHead(200, {"Content-Type": "text/html"});
