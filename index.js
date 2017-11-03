@@ -71,7 +71,7 @@ function sendMessageToEventHub(){
   });
 
   postRequest.on('error', function(e){
-      console.log("Error: " + e.message);
+      console.error(e);
       errorCount += 1;
   });
   
