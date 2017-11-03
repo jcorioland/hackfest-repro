@@ -29,10 +29,10 @@ const authorization = createSharedAccessToken(
 );
 
 const keepaliveAgent = new HttpsAgent({
-  maxSockets: 50,
+  maxSockets: 160,
   maxFreeSockets: 10,
-  timeout: 3000,
-  freeSocketKeepAliveTimeout: 5000,
+  timeout: 6000,
+  freeSocketKeepAliveTimeout: 30000,
 });
 
 console.log("Authorization: " + authorization);
@@ -67,6 +67,7 @@ function sendMessageToEventHub(){
     if(res.statusCode === 201) {
       successCount += 1;
     }
+    res.on('data', function() { /* do nothing */ });
   });
 
   postRequest.on('error', function(e){
